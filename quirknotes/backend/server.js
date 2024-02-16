@@ -44,7 +44,7 @@ app.get("/getAllNotes", express.json(), async (req, res) => {
     // Find notes with username attached to them
     const collection = db.collection(COLLECTIONS.notes);
     const data = await collection.find().toArray();
-    res.json({ response: [] });
+    res.json(data);
   } catch (error) {
     res.status(500).json({error: error.message})
   }
@@ -160,18 +160,18 @@ app.delete("/deleteAllNotes", express.json(), async (req, res) => {
 
 
 app.patch('/updateNoteColor/:noteId', express.json(), async (req, res) => {
-  const { noteId } = req.params;
-  const { color } = req.body;
+    const { noteId } = req.params;
+    const { color } = req.body;
 
-  if (!ObjectId.isValid(noteId)) {
-      return res.status(400).json({ error: "Invalid note ID." });
-  }
+    if (!ObjectId.isValid(noteId)) {
+        return res.status(400).json({ error: "Invalid note ID." });
+    }
 
-  try {
-      const collection = db.collection('notes');
-      await collection.updateOne({ _id: new ObjectId(noteId) }, { $set: { color } });
-      res.json({ message: 'Note color updated successfully.' });
-  } catch (error) {
-      res.status(500).json({ error: error.message });
-  }
+    try {
+        const collection = db.collection('notes');
+        await collection.updateOne({ _id: new ObjectId(noteId) }, { $set: { color } });
+        res.json({ message: 'Note color updated successfully.' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
